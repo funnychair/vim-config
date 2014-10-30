@@ -29,9 +29,10 @@ set foldmethod=syntax
 set foldcolumn=3 
 nnoremap @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')
 
-"$$$$$
+"set end of line $
 set listchars=eol:$,tab:>.,trail:~,extends:>,precedes:<
 set list
+
 "statusline
 set laststatus=2
 set statusline=%4*%<\ %1*[%F]
@@ -46,6 +47,7 @@ highlight User5 ctermfg=cyan
 highlight User6 ctermfg=white
 
 "plug-in
+"auto install vundle
 let iCanHazVundle=1
 let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
 if !filereadable(vundle_readme)
@@ -53,6 +55,7 @@ if !filereadable(vundle_readme)
 	echo ""
 	silent !mkdir -p ~/.vim/bundle
 	silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
+	silent !sudo apt-get install exuberant-ctags
 	let iCanHazVundle=0
 endif
 set rtp+=~/.vim/bundle/vundle/
@@ -72,6 +75,8 @@ Bundle "Syntastic"
 Bundle "javacomplete"
 setlocal omnifunc=javacomplete#Complete
 autocmd FileType java inoremap <buffer> . .<C-X><C-O><C-P>
+
+
 
 "colorscheme wombat256
 if exists("syntax_on")
@@ -123,6 +128,3 @@ hi Todo			ctermfg=245		cterm=none		guifg=#8f8f8f	gui=italic
 " Links
 hi! link FoldColumn		Folded
 hi! link CursorColumn	CursorLine
-
-" vim:set ts=4 sw=4 noet:
-
