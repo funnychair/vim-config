@@ -4,6 +4,8 @@ set backspace=2
 syntax on
 inoremap ;; <Esc>
 noremap zz <C-w>
+nnoremap <silent> <F5> :NERDTree<CR>
+nmap <F8> :TagbarToggle<CR>
 "inoremap <space><space> <C-n>
 "將Esc鍵替換為;;
 
@@ -15,12 +17,17 @@ set expandtab "use space instead of tab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-
 set ru
 set cursorline!
 set hlsearch
 set incsearch
 set t_Co=256
+
+"folding zi:start/stop zo(zO):open zc(zC):close zx:closeAllUnlessNow
+set foldenable 
+set foldmethod=syntax 
+set foldcolumn=3 
+nnoremap @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')
 
 "$$$$$
 set listchars=eol:$,tab:>.,trail:~,extends:>,precedes:<
@@ -38,6 +45,33 @@ highlight User4 term=underline cterm=underline ctermfg=white
 highlight User5 ctermfg=cyan
 highlight User6 ctermfg=white
 
+"plug-in
+let iCanHazVundle=1
+let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
+if !filereadable(vundle_readme)
+	echo "Installing Vundle.."
+	echo ""
+	silent !mkdir -p ~/.vim/bundle
+	silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
+	let iCanHazVundle=0
+endif
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+" Let Vundle manage itself.
+Bundle "gmarik/vundle"
+" Plugins
+Bundle "MarcWeber/vim-addon-mw-utils"
+Bundle "tomtom/tlib_vim"
+Bundle "garbas/vim-snipmate"
+Bundle "honza/vim-snippets"
+Bundle "The-NERD-tree"
+Bundle "Tagbar"
+Bundle "AutoComplPop"
+Bundle "Auto-Pairs"
+Bundle "Syntastic"
+Bundle "javacomplete"
+setlocal omnifunc=javacomplete#Complete
+autocmd FileType java inoremap <buffer> . .<C-X><C-O><C-P>
 
 "colorscheme wombat256
 if exists("syntax_on")
