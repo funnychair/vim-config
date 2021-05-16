@@ -1,14 +1,12 @@
-﻿syntax on
-set nocompatible
-set backspace=2
-set expandtab "use space instead of tab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+syntax on
 set autoindent
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
+
 set nu
 set ru
-set cursorline!
+set cursorline
 set hlsearch
 set incsearch
 
@@ -20,6 +18,9 @@ let mapleader = ","
 "nnoremap k <Down>
 "nnoremap i <Up>
 "nnoremap l <Right>
+nnoremap zx<Right> :bn<CR>
+nnoremap zx<Left> :bp<CR>
+nnoremap zx<Up> :bp<CR>:bd #<CR>
 
 "expr behavier
 set completeopt=longest,menu
@@ -33,6 +34,12 @@ inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 "set end of line $
 set listchars=eol:$,tab:>.,trail:~,extends:>,precedes:<
 set list
+
+if has('nvim')
+    " Neovim specific commands
+else
+    " Standard vim specific commands
+endif
 
 "plug-in
 "auto install vundle
@@ -54,29 +61,6 @@ call vundle#rc()
 Plugin 'gmarik/vundle'
 " Plugins
 
-"YouCompleteMe
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'Valloric/ListToggle'
-let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_collect_identifiers_from_tag_files = 1
-let g:ycm_min_num_of_chars_for_completion = 2
-let g:ycm_cache_omnifunc = 0
-let g:ycm_seed_identifiers_with_syntax = 1
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
-nnoremap <leader>jj :YcmCompleter GoToDefinitionElseDeclaration<CR>
-",l & ,q faster windows of error and fix
-
-"Syntastic
-Bundle 'scrooloose/syntastic'
-let g:syntastic_always_populate_loc_list = 1
-
-"TagBar
-Bundle 'majutsushi/tagbar'
-let g:tagbar_autofocus = 1
-let g:tagbar_width = 25
-nmap <leader>tb :TagbarToggle<CR>  "打开tagbar窗口
-
 "NERDTree
 Bundle 'scrooloose/nerdtree'
 nmap <leader>nt :NERDTree<CR>
@@ -91,6 +75,15 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeT
 "Open tagbar and nerdtree together for big screen.
 nmap <leader>b\ :TagbarToggle<CR> :NERDTree<CR>
 
+
+"TagBar
+Bundle 'majutsushi/tagbar'
+let g:tagbar_autofocus = 1
+let g:tagbar_width = 25
+nmap <leader>tb :TagbarToggle<CR>  "打开tagbar窗口
+
+
+
 "Airline
 Bundle 'bling/vim-airline'
 let g:airline#extensions#tabline#enabled = 1
@@ -99,42 +92,57 @@ let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 
 
-"indent line
-Bundle 'nathanaelkane/vim-indent-guides'
-let g:indent_guides_enable_on_vim_startup = 1  "defual open
-let g:indent_guides_guide_size            = 2  " 指定对齐线的尺寸
-let g:indent_guides_start_level       = 2  " 从第二层开始可视化显示缩进
-" ,ig 打开/关闭 vim-indent-guides
-"nnoremap <leader>bn :bn<CR>
-"nnoremap <leader>bp :bp<CR>
-nnoremap zx<Right> :bn<CR>
-nnoremap zx<Left> :bp<CR>
-nnoremap zx<Up> :bp<CR>:bd #<CR>
+Bundle 'w0rp/ale'
+let g:ale_sign_error = ''
+let g:ale_sign_warning = ''
+let g:ale_completion_enabled = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_swift_swiftlint_use_defaults = 1
+let g:ale_open_list = 0
+let g:ale_lint_delay = 1000
+let g:ale_linters = {
+      \ 'go': ['gofmt'],
+      \ }
 
-
-
-"colorsheme
-Bundle 'altercation/vim-colors-solarized'
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
-let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
-"" 主题 molokai
-Bundle 'tomasr/molokai'
-let g:molokai_original = 1
-" 配色方案
-set background=dark
 set t_Co=256
-"colorscheme solarized
+Bundle "pR0Ps/molokai-dark"
+Bundle "tomasr/molokai"
+"let g:molokai_original = 1
+"set background=dark
 colorscheme molokai
-"colorscheme phd
+"colorscheme molokai-dark
+
+
+"Bundle 'fatih/vim-go',{'for':'go', 'do': ':GoUpdateBinaries'}
+"let g:go_metalinter_command = "golangci-lint"
+"let g:go_metalinter_enabled = ['vet', 'errcheck', 'staticcheck', 'gosimple']
+"
+"if has('nvim')
+"  Bundle 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Bundle 'Shougo/deoplete.nvim'
+"  Bundle 'roxma/nvim-yarp'
+"  Bundle 'roxma/vim-hug-neovim-rpc'
+"endif
+""let g:deoplete#enable_at_startup = 1
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+
+
+"Bundle 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Bundle 'zchee/deoplete-go', { 'do': 'make'}
+"let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+"let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+
+
+
+
+
 
 filetype plugin indent on
-
-
-
-
-
 
 
 "Set the IDE for small screen.
@@ -179,7 +187,7 @@ function! ToggleNERDTreeAndTagbar()
         wincmd l
         wincmd L
         wincmd h
-        vertical resize 25
+        vertical resize 35
     endif
     "Jump back to the original window
     for window in range(1, winnr('$'))
